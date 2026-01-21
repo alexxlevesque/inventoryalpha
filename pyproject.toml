@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "inventoryalpha"
+version = "0.1.0"
+description = "Kalman-Based Inventory Alpha Micro-Diagnostic"
+authors = ["Alex Levesque"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+polars = "*"
+numpy = "*"
+scipy = "*"
+streamlit = "*"
+matplotlib = "*"
+plotly = "*"
+pykalman = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
