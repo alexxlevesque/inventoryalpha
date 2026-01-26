@@ -7,17 +7,6 @@ class SignalProcessor:
         pass
 
     def compute_fft(self, series: np.ndarray, sampling_rate: float = 1.0):
-        """
-        Computes the Fast Fourier Transform of a real-valued time series.
-        
-        Args:
-            series (np.ndarray): The input time series data.
-            sampling_rate (float): The sampling rate (default 1.0 for daily data).
-            
-        Returns:
-            frequencies (np.ndarray): The array of frequencies.
-            magnitude (np.ndarray): The magnitude of the FFT components.
-        """
         # Detrend the series by removing the mean to avoid a large zero-frequency component
         # We might want to remove linear trend too, but start with mean removal.
         series_clean = series - np.mean(series)
@@ -31,16 +20,6 @@ class SignalProcessor:
         return xf, magnitude
 
     def detect_seasonality(self, series: np.ndarray, top_k: int = 3):
-        """
-        Identifies the dominant periodic cycles in the data.
-        
-        Args:
-            series (np.ndarray): Input time series.
-            top_k (int): Number of top frequencies to return.
-            
-        Returns:
-            list: List of dictionaries containing 'period', 'frequency', and 'magnitude'.
-        """
         xf, magnitude = self.compute_fft(series)
         
         # Filter out zero frequency (if not fully removed by de-meaning) and very low frequencies
@@ -73,9 +52,6 @@ class SignalProcessor:
         return results
 
     def plot_frequency_spectrum(self, series: np.ndarray, title: str = "Frequency Spectrum"):
-        """
-        Generates a Plotly figure of the frequency spectrum.
-        """
         xf, magnitude = self.compute_fft(series)
         
         # Calculate periods for tooltip (avoid division by zero)
