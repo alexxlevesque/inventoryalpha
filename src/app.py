@@ -130,6 +130,12 @@ def main():
                    delta=-analysis['excess_units'], delta_color="inverse")
         kpi4.metric("Reduction Potential", f"{analysis['reduction_potential_pct']}%")
         
+        # Dynamic Explanation Sentence
+        if analysis['excess_units'] > 0:
+            st.markdown(f"**Insight:** Because your **Current Inventory** ({simulated_inventory} units) exceeds the **Target Inventory** ({analysis['target_inventory']} units), we've identified **{analysis['excess_units']} units** as 'Dead Inventory'. Reducing this could yield a **{analysis['reduction_potential_pct']}% reduction** in capital tied up, while still maintaining your **{analysis['safety_stock']} unit** safety stock buffer.")
+        else:
+            st.markdown(f"**Insight:** Your **Current Inventory** ({simulated_inventory} units) is lean relative to the **Target Inventory** ({analysis['target_inventory']} units). No excess inventory detected; your current levels are efficiently supporting the {service_level*100}% service level requirement.")
+
         st.divider()
 
         # --- Plots ---
@@ -164,6 +170,7 @@ def main():
             ax1.set_title(f"True Demand Signal Extraction via Kalman Filter")
             
             st.pyplot(fig1)
+            st.caption("**Demand vs. Estimate**: Raw sales (dots) are often noisy. The Kalman Filter extracts the 'True Demand' signal (bold line). The shaded blue area represents our 95% confidence interval—wider bands indicate higher volatility or less data certainty.")
             
         with col_side:
             st.subheader("Demand Probabilities")
@@ -187,6 +194,7 @@ def main():
             ax2.get_yaxis().set_visible(False)
             
             st.pyplot(fig2)
+            st.caption("**Risk Analysis**: This Bell curve represents the likelihood of different demand totals over the next lead time window. The red tail shows the probability of demand exceeding your target level (Stockout Risk).")
             
         # Inventory Bar Chart
         st.subheader("Inventory Snapshot")
@@ -210,6 +218,7 @@ def main():
             ax3.text(v + 1, i, str(v), va='center')
             
         st.pyplot(fig3)
+        st.caption("**Inventory Strategy**: Target inventory is the sum of Cycle Stock (average demand during lead time) and Safety Stock (the buffer for uncertainty). Comparing this to your 'Current Inventory' reveals potential 'Dead Inventory' or stockout risks.")
 
     except Exception as e:
         st.error(f"Analysis failed for {item_id} @ {store_id}: {str(e)}")
